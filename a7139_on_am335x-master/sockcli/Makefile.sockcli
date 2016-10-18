@@ -1,0 +1,27 @@
+
+SKCLI_DIR		:= $(FS_DIR)/sockcli
+SKCLI_INST_DIR	:= $(INST_DIR)/usr/lib
+
+SKCLI_OBJEXT  	:= .skcli
+SKCLI_SRCEXT	:= .c
+
+SKCLI_SRCS 		:= sockcli_app_test.c
+SKCLI_HEAD		:= $(SKCLI_DIR)/sockcli.h
+SKCLI_OBJS 		:= $(addsuffix $(SKCLI_OBJEXT), $(basename $(SKCLI_SRCS)))
+
+
+$(SKCLI_OBJS): $(SKCLI_SRCS) $(SKCLI_HEAD)
+	$(ECHO)echo CC $@
+	$(ECHO)$(CC) $(CFLAGS) -I$(SKCLI_DIR) -shared -fPIC -o $@ $(addsuffix $(SKCLI_SRCEXT), $(basename $@)) -lc
+
+SKCLI_ALL: $(SKCLI_OBJS)
+
+SKCLI_INSTALL:
+	$(ECHO)echo INSTALL $(SKCLI_OBJS)
+	$(ECHO)install -p -D -m 0755 $(SKCLI_OBJS) $(SKCLI_INST_DIR)/$(SKCLI_OBJS)
+
+SKCLI_CLEAN:
+	$(ECHO)echo clean $(SKCLI_OBJS)
+	$(ECHO)rm -rf $(SKCLI_OBJS)
+
+#echo "Makefile.sockcli"

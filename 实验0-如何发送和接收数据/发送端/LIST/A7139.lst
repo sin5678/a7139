@@ -1,0 +1,471 @@
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE A7139
+OBJECT MODULE PLACED IN .\BIN\A7139.obj
+COMPILER INVOKED BY: C:\Keil3\C51\BIN\C51.EXE A7139\A7139.c BROWSE INCDIR(.\A7139;.\MISC;.\PLATFORM) DEBUG OBJECTEXTEND 
+                    -PRINT(.\LIST\A7139.lst) OBJECT(.\BIN\A7139.obj)
+
+line level    source
+
+   1          #include "A7139.h"
+   2          
+   3          const Uint8  CODE ID_Tab[];
+   4          const Uint16 CODE Freq_Cal_Tab[];
+   5          const Uint16 CODE A7139Config_PageA[];
+   6          const Uint16 CODE A7139Config_PageB[];
+   7          const Uint16 CODE A7139Config[];
+   8          
+   9          static void A7139_WriteReg(Uint8 regAddr, Uint16 regVal)
+  10          {
+  11   1          SCS=0;
+  12   1          regAddr |= CMD_Reg_W;
+  13   1          SPIx_WriteByte(regAddr);
+  14   1          _nop_();
+  15   1          SPIx_WriteWord(regVal);
+  16   1          SCS=1;
+  17   1      }
+  18          
+  19          static Uint16 A7139_ReadReg(Uint8 regAddr)
+  20          {
+  21   1          Uint16 regVal;
+  22   1          SCS=0;
+  23   1          regAddr |= CMD_Reg_R;
+  24   1              SPIx_WriteByte(regAddr);
+  25   1          _nop_();
+  26   1              regVal=SPIx_ReadWord();
+  27   1          SCS=1;
+  28   1          return regVal;
+  29   1      }
+  30          
+  31          static void A7139_WritePageA(Uint8 address, Uint16 dataWord)
+  32          {
+  33   1          Uint16 tmp;
+  34   1          tmp = address;
+  35   1          tmp = ((tmp << 12) | A7139Config[CRYSTAL_REG]);
+  36   1          A7139_WriteReg(CRYSTAL_REG, tmp);
+  37   1          A7139_WriteReg(PAGEA_REG, dataWord);
+  38   1      }
+  39          
+  40          static void A7139_WritePageB(Uint8 address, Uint16 dataWord)
+  41          {
+  42   1          Uint16 tmp;
+  43   1          tmp = address;
+  44   1          tmp = ((tmp << 7) | A7139Config[CRYSTAL_REG]);
+  45   1          A7139_WriteReg(CRYSTAL_REG, tmp);
+  46   1          A7139_WriteReg(PAGEB_REG, dataWord);
+  47   1      }
+  48          
+  49          static Uint16 A7139_ReadPageA(Uint8 address)
+  50          {
+  51   1          Uint16 tmp;
+  52   1          tmp = address;
+  53   1          tmp = ((tmp << 12) | A7139Config[CRYSTAL_REG]);
+  54   1          A7139_WriteReg(CRYSTAL_REG, tmp);
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 2   
+
+  55   1          tmp = A7139_ReadReg(PAGEA_REG);
+  56   1          return tmp;
+  57   1      }
+  58          
+  59          static void A7139_Config(void)
+  60          {
+  61   1              Uint8 i;
+  62   1          for(i=0; i<8; i++)
+  63   1              A7139_WriteReg(i, A7139Config[i]);
+  64   1              for(i=10; i<16; i++)
+  65   1              A7139_WriteReg(i, A7139Config[i]);
+  66   1          for(i=0; i<16; i++)
+  67   1              A7139_WritePageA(i, A7139Config_PageA[i]);
+  68   1              for(i=0; i<5; i++)
+  69   1              A7139_WritePageB(i, A7139Config_PageB[i]);
+  70   1      }
+  71          
+  72          static void A7139_Cal(void)
+  73          {
+  74   1          Uint8 fb, fcd, fbcf;        //IF Filter
+  75   1              Uint8 vb,vbcf;                  //VCO Current
+  76   1              Uint8 vcb, vccf;                //VCO Band
+  77   1              Uint16 tmp;
+  78   1          //IF calibration procedure @STB state
+  79   1              A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x0802);                       //IF Filter & VCO Current Calibration
+  80   1          do{
+  81   2              tmp = A7139_ReadReg(MODE_REG);
+  82   2          }while(tmp & 0x0802);
+  83   1          //for check(IF Filter)
+  84   1          tmp = A7139_ReadReg(CALIBRATION_REG);
+  85   1          fb = tmp & 0x0F;
+  86   1              fcd = (tmp>>11) & 0x1F;
+  87   1          fbcf = (tmp>>4) & 0x01;
+  88   1          if(fbcf)
+  89   1          {
+  90   2              //Err_State();
+  91   2          }
+  92   1              //for check(VCO Current)
+  93   1          tmp = A7139_ReadPageA(VCB_PAGEA);
+  94   1              vcb = tmp & 0x0F;
+  95   1              vccf = (tmp>>4) & 0x01;
+  96   1              if(vccf)
+  97   1              {
+  98   2              //Err_State();
+  99   2          }
+ 100   1          //RSSI Calibration procedure @STB state
+ 101   1              A7139_WriteReg(ADC_REG, 0x4C00);                                                                        //set ADC average=64
+ 102   1          A7139_WritePageA(WOR2_PAGEA, 0xF800);                                                               //set RSSC_D=40us and RS_DLY=80us
+ 103   1              A7139_WritePageA(TX1_PAGEA, A7139Config_PageA[TX1_PAGEA] | 0xE000);     //set RC_DLY=1.5ms
+ 104   1          A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x1000);                   //RSSI Calibration
+ 105   1          do{
+ 106   2              tmp = A7139_ReadReg(MODE_REG);
+ 107   2          }while(tmp & 0x1000);
+ 108   1              A7139_WriteReg(ADC_REG, A7139Config[ADC_REG]);
+ 109   1          A7139_WritePageA(WOR2_PAGEA, A7139Config_PageA[WOR2_PAGEA]);
+ 110   1              A7139_WritePageA(TX1_PAGEA, A7139Config_PageA[TX1_PAGEA]);
+ 111   1          //VCO calibration procedure @STB state
+ 112   1          //for(i=0; i<3; i++)
+ 113   1          
+ 114   1              A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x0004);               //VCO Band Calibration
+ 115   1              do{
+ 116   2                      tmp = A7139_ReadReg(MODE_REG);
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 3   
+
+ 117   2              }while(tmp & 0x0004);
+ 118   1                      //for check(VCO Band)
+ 119   1              tmp = A7139_ReadReg(CALIBRATION_REG);
+ 120   1              vb = (tmp >>5) & 0x07;
+ 121   1              vbcf = (tmp >>8) & 0x01;
+ 122   1              if(vbcf)
+ 123   1              {
+ 124   2                      //Err_State();
+ 125   2              }
+ 126   1      }
+ 127          
+ 128          void StrobeCmd(Uint8 cmd)
+ 129          {
+ 130   1          SCS=0;
+ 131   1          SPIx_WriteByte(cmd);
+ 132   1              SCS=1;
+ 133   1      }
+ 134          
+ 135          void A7139_Init(float rfFreq)
+ 136          {
+ 137   1          SCS  = 1;
+ 138   1          SCK  = 0;
+ 139   1          SDIO = 1;
+ 140   1          CKO  = 1;
+ 141   1          GIO1 = 1;
+ 142   1          GIO2 = 1;
+ 143   1          StrobeCmd(CMD_RF_RST);        //reset A7139 chip
+ 144   1          A7139_Config();                       //config A7139 chip
+ 145   1          Delay10ms(1);                         //for crystal stabilized
+ 146   1          A7139_SetCID(0x3475C58CUL); //set CID code
+ 147   1              A7139_SetFreq(rfFreq);    //set Freq
+ 148   1          A7139_Cal();                  //IF and VCO calibration
+ 149   1      }
+ 150          
+ 151          void A7139_SetCID(Uint32 id)
+ 152          {
+ 153   1              SCS=0;
+ 154   1              SPIx_WriteByte(CMD_CID_W);
+ 155   1              SPIx_WriteByte((Uint8)(id>>24));
+ 156   1              SPIx_WriteByte((Uint8)(id>>16));
+ 157   1              SPIx_WriteByte((Uint8)(id>>8));
+ 158   1              SPIx_WriteByte((Uint8)id);
+ 159   1              SCS=1;
+ 160   1      }
+ 161          
+ 162          Uint16 A7139_ReadPID(void)
+ 163          {
+ 164   1              Uint16 pid;
+ 165   1              Uint16 pagAddr = TX2_PAGEB << 7;
+ 166   1              pagAddr|=A7139Config[CRYSTAL_REG] & 0xF7CF;
+ 167   1              A7139_WriteReg(CRYSTAL_REG, pagAddr);
+ 168   1              pid = A7139_ReadReg(PAGEB_REG);
+ 169   1              return pid;
+ 170   1      }
+ 171          
+ 172          static void A7139_SetFreq(float rfFreq)
+ 173          {
+ 174   1               float  divFreq = rfFreq / 12.800f;  
+ 175   1               Uint8  intFreq = (Uint8)(divFreq); //integer part
+ 176   1               float  fltFreq = divFreq - intFreq * 1.000f; //fraction part
+ 177   1               Uint16 fpFreg  = (Uint16)(fltFreq * 65536);  //FP register val
+ 178   1               Uint16 orgVal;
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 4   
+
+ 179   1               StrobeCmd(CMD_STBY); //enter stand-by mode
+ 180   1                               //AFC[15:15] = 0
+ 181   1               orgVal = A7139Config[PLL3_REG] & 0x7FFF;
+ 182   1               A7139_WriteReg(PLL3_REG,orgVal);
+ 183   1                              //RFC[15:12] = 0000
+ 184   1               orgVal = A7139Config[PLL6_REG] & 0x0FFF;
+ 185   1               A7139_WriteReg(PLL6_REG,orgVal);
+ 186   1                      //MD1[12:12]=0,1
+ 187   1               if(rfFreq < 860)       //433-510
+ 188   1                      orgVal = A7139Config[PLL4_REG] & 0xEFFF;
+ 189   1               else    //868-915
+ 190   1                      orgVal = A7139Config[PLL4_REG] | 0x1000;
+ 191   1               A7139_WriteReg(PLL4_REG,orgVal);
+ 192   1                              //IP[8:0] = intg
+ 193   1               orgVal = A7139Config[PLL1_REG] & 0xFF00;
+ 194   1               A7139_WriteReg(PLL1_REG,orgVal|intFreq);
+ 195   1                              //FP[15:0] =  fpFreg
+ 196   1               A7139_WriteReg(PLL2_REG,fpFreg); 
+ 197   1                              //FPA[15:0]=0x0000
+ 198   1               A7139_WritePageB(IF2_PAGEB,0x0000);    
+ 199   1      }
+ 200          
+ 201          Uint8 A7139_SetDataRate(Uint8 datRate)
+ 202          {
+ 203   1              Uint16 segCSC,segSDR,segIFB,segDMO;
+ 204   1              StrobeCmd(CMD_STBY);//enter stand by mode
+ 205   1              segCSC = A7139Config[SYSTEMCLOCK_REG] & 0xFFF8;//CSC_CLR  
+ 206   1              segSDR = A7139Config[SYSTEMCLOCK_REG] & 0x01FF;//SDR_CLR
+ 207   1              segIFB = A7139Config[RX1_REG] & 0xFFF3; //IFBW_CLR
+ 208   1              segDMO = A7139Config[RX1_REG] & 0xFFBF;  //DMOS_CLR
+ 209   1              A7139_WriteReg(RX1_REG,segDMO|0x0040); //DMOS_SET
+ 210   1              switch(datRate)
+ 211   1              {
+ 212   2                      case 2:
+ 213   2                      {       
+ 214   3                                              //CSC=011,fcsck=3.2MHz
+ 215   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segCSC|0x0003);
+ 216   3                                              //SDR=0x18      
+ 217   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segSDR|0x3000);
+ 218   3                                              //IFBW=[00] <=> 50kHz
+ 219   3                              A7139_WriteReg(RX1_REG,segIFB|0x0000);          
+ 220   3                      }
+ 221   2                      break;
+ 222   2                      case 10:
+ 223   2                      {
+ 224   3                                              //CSC=011,fcsck=3.2MHz 
+ 225   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segCSC|0x0003);
+ 226   3                                              //SDR=0x04
+ 227   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segSDR|0x0800);
+ 228   3                                              //IFBW=[00] <=> 50kHz
+ 229   3                              A7139_WriteReg(RX1_REG,segIFB|0x0000);
+ 230   3                      }
+ 231   2                      break;
+ 232   2                      case 50:
+ 233   2                      {
+ 234   3                                              //CSC=011 ,fcsck=3.2MHz
+ 235   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segCSC|0x0003);
+ 236   3                                              //SDR=0x00
+ 237   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segSDR|0x0000);
+ 238   3                                              //IFBW=[00] <=> 50kHz
+ 239   3                              A7139_WriteReg(RX1_REG,segIFB|0x0000); 
+ 240   3                      }
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 5   
+
+ 241   2                      break;
+ 242   2                      case 100:
+ 243   2                      {
+ 244   3                                              //CSC=001 ,fcsck=6.4MHz
+ 245   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segCSC|0x0001);
+ 246   3                                              //SDR=0x00                      
+ 247   3                              A7139_WriteReg(SYSTEMCLOCK_REG,segSDR|0x0000);
+ 248   3                                              //IFBW=[01] <=> 100kHz
+ 249   3                              A7139_WriteReg(RX1_REG,segIFB|0x0004);
+ 250   3                      }
+ 251   2                      break;
+ 252   2                      case 150:
+ 253   2                      {
+ 254   3                              //must use Pll clk gen,complement in detail later
+ 255   3                              //IFBW=[10] <=> 150kHz
+ 256   3                              //DCK=150K
+ 257   3                              //CSC=000,fcsck=9.6MHz
+ 258   3                              //SDR=0x00
+ 259   3                              //DMOS=1,IFBW=150KHz
+ 260   3                      }
+ 261   2                      break;
+ 262   2                      default:
+ 263   2                      return ERR_PARAM;
+ 264   2              }
+ 265   1              return 0;
+ 266   1      }
+ 267          
+ 268          Uint8 A7139_SetPackLen(Uint8 len)
+ 269          {
+ 270   1              Uint16 pagVal;
+ 271   1              StrobeCmd(CMD_STBY);
+ 272   1                              //FEP[7:0]
+ 273   1              pagVal = A7139Config_PageA[FIFO_PAGEA] & 0xFF00;
+ 274   1              A7139_WritePageA(FIFO_PAGEA,pagVal|(len-1));
+ 275   1                              //FEP[13:8]
+ 276   1              pagVal = A7139Config_PageA[VCB_PAGEA] & 0xC0FF;
+ 277   1              A7139_WritePageA(VCB_PAGEA,pagVal);
+ 278   1              return 0;                       
+ 279   1      }
+ 280          
+ 281          Uint8 A7139_IsBatteryLow(Uint8 low2_x)
+ 282          {
+ 283   1              Uint16 pagVal;
+ 284   1              if(low2_x<0 || low2_x>7)
+ 285   1                      return ERR_PARAM;
+ 286   1              StrobeCmd(CMD_STBY);
+ 287   1                              //BVT[3:1] BDS[0:0]
+ 288   1              pagVal= A7139Config[PM_PAGEA] & 0xFFF0;
+ 289   1              A7139_WritePageA(PM_PAGEA,pagVal | (low2_x << 1) | 0x01);
+ 290   1              Delay10us(1); //delay 5us at least 
+ 291   1                              //read VBD[7:7]
+ 292   1              return !((A7139_ReadPageA(WOR1_PAGEA) & 0x0080) >> 7);
+ 293   1      }
+ 294          Uint8 A7139_GetRSSI()
+ 295          {       
+ 296   1              Uint8  rssi;
+ 297   1              Uint16 t_retry = 0xFFFF;
+ 298   1                      //entry RX mode
+ 299   1              StrobeCmd(CMD_RX);      
+ 300   1                              //CDM[8:8] = 0
+ 301   1              A7139_WriteReg(ADC_REG,A7139Config[ADC_REG] & 0xFEFF);
+ 302   1                              //ADCM[0:0] = 1
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 6   
+
+ 303   1              A7139_WriteReg(MODE_REG,A7139_ReadReg(MODE_REG) | 0x0001);
+ 304   1              do
+ 305   1              {
+ 306   2                      rssi = A7139_ReadReg(MODE_REG) & 0x0001; //ADCM auto clear when measurement done
+ 307   2                              
+ 308   2              }while(t_retry-- && rssi);
+ 309   1              if(t_retry>0)
+ 310   1                      rssi=(A7139_ReadReg(ADC_REG) & 0x00FF);  //ADC[7:0] is the value of RSSI
+ 311   1              else
+ 312   1                      rssi = ERR_GET_RSSI;
+ 313   1              StrobeCmd(CMD_STBY);
+ 314   1              return rssi;            
+ 315   1      }
+ 316          Uint8 A7139_RCOSC_Cal(void)
+ 317          {
+ 318   1                Uint8  retry = 0xFF;
+ 319   1                Uint16 calbrtVal,t_retry=0xFFFF;
+ 320   1                              //RCOSC_E[4:4] = 1,enable internal RC Oscillator
+ 321   1                A7139_WritePageA(WOR2_PAGEA, A7139Config_PageA[WOR2_PAGEA] | 0x0010);
+ 322   1                do{
+ 323   2                                      //ENCAL[0:0] = 1,then start RC OSC Calbrt
+ 324   2                        A7139_WritePageA(WCAL_PAGEA, A7139Config_PageA[WCAL_PAGEA] | 0x0001);
+ 325   2                        do{
+ 326   3                                calbrtVal = A7139_ReadPageA(WCAL_PAGEA) & 0x0001;
+ 327   3                        }while(calbrtVal && t_retry--);
+ 328   2                                      //read NUMLH[9:1]
+ 329   2                        calbrtVal = (A7139_ReadPageA(WCAL_PAGEA) & 0x03FF) >> 1;
+ 330   2                        if(calbrtVal>186 && calbrtVal<198)
+ 331   2                                 return OK_RCOSC_CAL;
+ 332   2                      }while(retry--);
+ 333   1                return ERR_RCOSC_CAL;
+ 334   1      }
+ 335          Uint8 A7139_WOT(void)
+ 336          {
+ 337   1              if(A7139_RCOSC_Cal()==ERR_RCOSC_CAL)
+ 338   1                      return 1;
+ 339   1              StrobeCmd(CMD_STBY);
+ 340   1                      //GIO1=FSYNC, GIO2=WTR  
+ 341   1              A7139_WritePageA(GIO_PAGEA, 0x0045);
+ 342   1                      //setup WOT Sleep time
+ 343   1              A7139_WritePageA(WOR1_PAGEA, 0x027f);
+ 344   1                      //WMODE=1 select WOT function
+ 345   1              A7139_WriteReg(PIN_REG, A7139Config[PIN_REG] | 0x0400);
+ 346   1                      //WORE=1 to enable WOT function         
+ 347   1              A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x0200);
+ 348   1              while(1);
+ 349   1      }
+ 350          Uint8 A7139_WOR_BySync(void)
+ 351          {
+ 352   1              StrobeCmd(CMD_STBY);
+ 353   1                              //GIO1=FSYNC, GIO2=WTR  
+ 354   1              A7139_WritePageA(GIO_PAGEA, 0x0045);
+ 355   1                              //setup WOR Sleep time and Rx time
+ 356   1              A7139_WritePageA(WOR1_PAGEA, 0xFC05);
+ 357   1              if(A7139_RCOSC_Cal()==ERR_RCOSC_CAL)
+ 358   1                      return 1;
+ 359   1                              //enable RC OSC & WOR by sync
+ 360   1              A7139_WritePageA(WOR2_PAGEA, A7139Config_PageA[WOR2_PAGEA] | 0x0010);
+ 361   1                              //WORE=1 to enable WOR function
+ 362   1              A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x0200);
+ 363   1                              //Stay in WOR mode until receiving ID code(sync ok)
+ 364   1      }
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 7   
+
+ 365          Uint8 A7139_WOR_ByPreamble(void)
+ 366          {
+ 367   1              StrobeCmd(CMD_STBY);
+ 368   1              A7139_WritePageA(GIO_PAGEA, 0x004D);    //GIO1=PMDO, GIO2=WTR
+ 369   1      
+ 370   1              //Real WOR Active Period = (WOR_AC[5:0]+1) x 244us ¡V X'TAL and Regulator Settling Time
+ 371   1              //Note : Be aware that X¡¦tal settling time requirement includes initial tolerance, 
+ 372   1              //       temperature drift, aging and crystal loading.
+ 373   1              A7139_WritePageA(WOR1_PAGEA, 0x8005);   //setup WOR Sleep time and Rx time
+ 374   1                                      //RC Oscillator Calibration
+ 375   1              if(A7139_RCOSC_Cal()==ERR_RCOSC_CAL)
+ 376   1                      return 1;     
+ 377   1              A7139_WritePageA(WOR2_PAGEA, A7139Config_PageA[WOR2_PAGEA] | 0x0030);   //enable RC OSC & WOR by preamble
+ 378   1              
+ 379   1              A7139_WriteReg(MODE_REG, A7139Config[MODE_REG] | 0x0200);                               //WORE=1 to enable WOR function
+ 380   1              
+ 381   1              //while(GIO1==0);               //Stay in WOR mode until receiving preamble(preamble ok)
+ 382   1      }
+ 383          
+ 384          const Uint16 CODE A7139Config[]=                //470MHz, 10kbps (IFBW = 100KHz, Fdev = 37.5KHz), Crystal=12.8MHz
+ 385          {
+ 386                  0x1221,         //SYSTEM CLOCK register,
+ 387                  0x0A24,         //PLL1 register,
+ 388                  0xB805,         //PLL2 register,        470.001MHz
+ 389                  0x0000,         //PLL3 register,
+ 390                  0x0A20,         //PLL4 register,
+ 391                  0x0024,         //PLL5 register,
+ 392                  0x0000,         //PLL6 register,
+ 393                  0x0001,         //CRYSTAL register,
+ 394                  0x0000,         //PAGEA,
+ 395                  0x0000,         //PAGEB,
+ 396                  0x18D4,         //RX1 register,         IFBW=100KHz, ETH=1      
+ 397                  0x7009,         //RX2 register,         by preamble
+ 398                  0x4400,         //ADC register,         
+ 399                  0x0800,         //PIN CONTROL register,         Use Strobe CMD
+ 400                  0x4845,         //CALIBRATION register,
+ 401                  0x20C0          //MODE CONTROL register,        Use FIFO mode
+ 402          };
+ 403          
+ 404          const Uint16 CODE A7139Config_PageA[]=   //470MHz, 10kbps (IFBW = 100KHz, Fdev = 37.5KHz), Crystal=12.8MHz
+ 405          {
+ 406                  0x1706,         //TX1 register,         Fdev = 37.5kHz
+ 407                  0x0000,         //WOR1 register,
+ 408                  0x0000,         //WOR2 register,
+ 409                  0x1187,         //RFI register,         Enable Tx Ramp up/down  
+ 410                  0x8170,         //PM register,          CST=1
+ 411                  0x0201,         //RTH register,
+ 412                  0x400F,         //AGC1 register,        
+ 413                  0x2AC0,         //AGC2 register, 
+ 414                  0x0045,         //GIO register,         GIO2=WTR, GIO1=FSYNC
+ 415                  0xD281,         //CKO register
+ 416                  0x0004,         //VCB register,
+ 417                  0x0021,         //CHG1 register,        480MHz
+ 418                  0x0022,         //CHG2 register,        500MHz
+ 419                  0x003F,         //FIFO register,        FEP=63+1=64bytes
+ 420                  0x1507,         //CODE register,        Preamble=4bytes, ID=4bytes
+ 421                  0x0000          //WCAL register,
+ 422          };
+ 423          
+ 424          const Uint16 CODE A7139Config_PageB[]=   //470MHz, 10kbps (IFBW = 100KHz, Fdev = 37.5KHz), Crystal=12.8MHz
+ 425          {
+ 426                  0x0B37,         //TX2 register,
+C51 COMPILER V8.02   A7139                                                                 09/09/2014 23:04:55 PAGE 8   
+
+ 427                  0x8400,         //IF1 register,         Enable Auto-IF, IF=200KHz
+ 428                  0x0000,         //IF2 register,
+ 429                  0x0000,         //ACK register,
+ 430                  0x0000          //ART register,
+ 431          };
+ 432          
+ 433          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1690    ----
+   CONSTANT SIZE    =     74    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      56
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

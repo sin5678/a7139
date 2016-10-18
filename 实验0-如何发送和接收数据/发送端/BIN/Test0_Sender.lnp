@@ -1,0 +1,5 @@
+".\BIN\main.obj",
+".\BIN\A7139.obj",
+".\BIN\PLATFORM.obj" 
+TO ".\BIN\Test0_Sender" 
+PRINT(".\LIST\Test0_Sender.m51") RAMSIZE(256) 

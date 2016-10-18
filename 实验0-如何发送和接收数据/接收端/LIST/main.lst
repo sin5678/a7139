@@ -1,0 +1,94 @@
+C51 COMPILER V8.02   MAIN                                                                  09/08/2014 20:54:13 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\BIN\main.obj
+COMPILER INVOKED BY: C:\Keil3\C51\BIN\C51.EXE USER\main.c BROWSE INCDIR(.\A7139;.\MISC;.\PLATFORM) DEBUG OBJECTEXTEND PR
+                    -INT(.\LIST\main.lst) OBJECT(.\BIN\main.obj)
+
+line level    source
+
+   1          #include "AT89X52.h"
+   2          #include "INTDEF.h"
+   3          #include "A7139.h"
+   4          #include "PLATFORM.h"
+   5          
+   6          #define LED (P3_6) //LED与P3.6相连，低电平有效（点亮）
+   7          #define KEY (P3_7) //KEY与P3.7相连，低电平有效（按下）
+   8          Uint8 idata tmpbuf[64]; //数组用于存放接收到的数据
+   9          /*XTAL @11.0592*/
+  10          static void LED_Flash_Twice(void)
+  11          {
+  12   1              LED=0;
+  13   1              Delay10ms(2);
+  14   1              LED=1;
+  15   1              Delay10ms(2);
+  16   1              LED=0;
+  17   1              Delay10ms(2);
+  18   1              LED=1;
+  19   1      }
+  20          
+  21          void A7139_WriteFIFO(void)
+  22          {
+  23   1              Uint8 i;
+  24   1              StrobeCmd(CMD_TFR);     //重置Tx数据指针位置    
+  25   1          SCS=0;
+  26   1              SPIx_WriteByte(CMD_FIFO_W);//送出“写FIFO缓存区”的命令
+  27   1              for(i=0; i <64; i++)
+  28   1                      SPIx_WriteByte(i+64);//送出待发送的数据
+  29   1              SCS=1;                                   //将64-127之间的数字作为接收端反馈数据而写入A7139内部的FIFO缓冲区中，反馈给发送端                                    
+  30   1                                                               //这里只为演示简单，故采取用64-127之间的数字，用户可自行修改需要发送的反馈数据
+  31   1      }
+  32          
+  33          void A7139_ReadFIFO(void)
+  34          {
+  35   1          Uint8 i;
+  36   1              StrobeCmd(CMD_RFR); //重置Rx数据指针位置
+  37   1          SCS=0;
+  38   1              SPIx_WriteByte(CMD_FIFO_R);//送出“读FIFO缓存区”的命令
+  39   1              for(i=0; i <64; i++)
+  40   1                      tmpbuf[i] = SPIx_ReadByte(); //从A7139内部的FIFO缓冲区中读取数据，并将接收到数据暂存入数组tmpbuf中以备它
+             -用
+  41   1              SCS=1;
+  42   1      }
+  43          void C51_SendData(void)
+  44          {       
+  45   1              A7139_WriteFIFO();
+  46   1              StrobeCmd(CMD_TX);
+  47   1              while(GIO2); //循环等待，数据发送完毕后，GIO2引脚将输出一个正脉冲信号
+  48   1      }
+  49          void C51_RecvData(void)
+  50          {
+  51   1              StrobeCmd(CMD_RX);
+  52   1              while(GIO2); //循环等待，数据接收完毕后，GIO2引脚将输出一个正脉冲信号
+  53   1              A7139_ReadFIFO();
+C51 COMPILER V8.02   MAIN                                                                  09/08/2014 20:54:13 PAGE 2   
+
+  54   1      }
+  55          void main(void)
+  56          {
+  57   1              A7139_Init(433.921f); //A7139初始化
+  58   1              LED_Flash_Twice();//上电LED闪烁2次，作为指示灯
+  59   1              while(1)
+  60   1              {
+  61   2                  C51_RecvData(); 
+  62   2                      LED_Flash_Twice();
+  63   2                      C51_SendData();
+  64   2              }
+  65   1      }
+  66          
+  67          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =     64    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

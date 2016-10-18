@@ -1,0 +1,150 @@
+#! /bin/sh
+#
+# syslogd    init.d script for busybox syslogd/klogd
+#   Written by Robert Griebl <sandman@handhelds.org>
+#   Configuration file added by <bruno.randolf@4g-systems.biz>
+#   modifyed by redfox.qu@qq.com 2014/3/11  use nvram to prepare syslog argument
+#   modifyed by redfox.qu@qq.com 2014/3/25  add 'add' 'del' 'setlevel' command
+
+syslogd=/sbin/syslogd
+klogd=/sbin/klogd
+SYSLOG_CFG_FILE=/etc/syslog.conf
+SYSLOG_CFG_DEF_FILE=/etc/syslog.conf.default
+APPLOG_WEB_TMP_FILE=/tmp/applog.tmp
+APPLOG_WEB_PREFIX=debug_level_
+
+D="file"
+REDUCE=no
+BUFFERSIZE=512
+LOGFILE=/var/log/messages
+ROTATESIZE=512
+ROTATEGENS=3
+REMOTE=loghost:514
+
+
+DEBUG_LOCAL_REMOTE=`nvram get debug_local_remote`
+DEBUG_LOCAL_PTS=`nvram get debug_local_pts`
+DEBUG_REMOTE_IP=`nvram get debug_remote_ip`
+
+cp $SYSLOG_CFG_DEF_FILE $SYSLOG_CFG_FILE
+
+if [ "$DEBUG_LOCAL_REMOTE" = "local" ]; then
+    D="file"
+elif [ "$DEBUG_LOCAL_REMOTE" = "remote" ]; then
+    D="remote"
+fi
+if [ -n "$DEBUG_REMOTE_IP" ]; then
+    REMOTE=$DEBUG_REMOTE_IP
+fi
+if [ ! -f $APPLOG_WEB_TMP_FILE ]; then
+    touch $APPLOG_WEB_TMP_FILE
+fi
+
+LOG_LOCAL=0
+LOG_REMOTE=0
+if [ "$D" = "buffer" ]; then
+    SYSLOG_ARGS="$SYSLOG_ARGS -C$BUFFERSIZE"
+    LOG_LOCAL=1
+elif [ "$D" = "file" ]; then
+    if [ -n "$LOGFILE" ]; then
+        SYSLOG_ARGS="$SYSLOG_ARGS -O $LOGFILE"
+    fi
+    if [ -n "$ROTATESIZE" ]; then
+        SYSLOG_ARGS="$SYSLOG_ARGS -s $ROTATESIZE"
+    fi
+    if [ -n "$ROTATEGENS" ]; then
+        SYSLOG_ARGS="$SYSLOG_ARGS -b $ROTATEGENS"
+    fi
+    if [ "$DEBUG_LOCAL_PTS" = "1" ]; then
+        echo "*.* /dev/pts/0" >> $SYSLOG_CFG_FILE
+    fi
+    LOCAL=1
+elif [ "$D" = "remote" ]; then
+    SYSLOG_ARGS="$SYSLOG_ARGS -R $REMOTE"
+    LOG_REMOTE=1
+fi
+if [ "$LOG_LOCAL" = "1" -a "$LOG_REMOTE" = "1" ]; then
+    SYSLOG_ARGS="$SYSLOG_ARGS -L"
+fi
+if [ -n "$MARKINT" ]; then
+    SYSLOG_ARGS="$SYSLOG_ARGS -m $MARKINT"
+fi
+if [ "$REDUCE" = "yes" ]; then
+    SYSLOG_ARGS="$SYSLOG_ARGS -S"
+fi
+
+case "$1" in
+    start)
+        echo -n "Starting syslogd/klogd"
+        echo "SYSLOG_ARGS=$SYSLOG_ARGS"
+        start-stop-daemon --start --quiet --exec $syslogd -- $SYSLOG_ARGS
+        start-stop-daemon --start --quiet --exec $klogd
+        echo "."
+        ;;
+    stop)
+        echo -n "Stopping syslogd/klogd"
+        start-stop-daemon --stop --quiet --exec $syslogd
+        start-stop-daemon --stop --quiet --exec $klogd
+        echo "."
+        ;;
+    restart)
+        echo -n "Stopping syslogd/klogd"
+        start-stop-daemon --stop --quiet --exec $syslogd
+        start-stop-daemon --stop --quiet --exec $klogd
+        echo "."
+        echo -n "Waiting for syslogd/klogd to die off"
+        for i in 1 2 3 ;
+        do
+            sleep 1
+            echo -n "."
+        done
+        echo ""
+        echo -n "Starting syslogd/klogd"
+        start-stop-daemon --start --quiet --exec $syslogd -- $SYSLOG_ARGS
+        start-stop-daemon --start --quiet --exec $klogd
+        echo "."
+        ;;
+    add)
+        echo "add $2 to syslog web list"
+        cat ${APPLOG_WEB_TMP_FILE} | grep "$2" > /dev/null
+        if [ $? = 0 ]; then
+            echo "Already added"
+            exit 0
+        fi
+        cp -f ${APPLOG_WEB_TMP_FILE} ${APPLOG_WEB_TMP_FILE}.1
+        echo "${APPLOG_WEB_PREFIX}$2=\"$3\"" >> ${APPLOG_WEB_TMP_FILE}.1
+        cat ${APPLOG_WEB_TMP_FILE}.1 | sed "/^$/d" > ${APPLOG_WEB_TMP_FILE}
+        if [ $? = 0 ]; then
+            echo "Done"
+            exit 0
+        else
+            echo "Error"
+            exit 1
+        fi
+        ;;
+    del)
+        echo "del $2 from syslog web list"
+        cat ${APPLOG_WEB_TMP_FILE} | sed "/^${APPLOG_WEB_PREFIX}$2=/d; /^$/d" > ${APPLOG_WEB_TMP_FILE}.1
+        cp -f ${APPLOG_WEB_TMP_FILE}.1 ${APPLOG_WEB_TMP_FILE} 
+        if [ $? = 0 ]; then
+            echo "Done"
+            exit 0
+        else
+            echo "Error"
+            exit 1
+        fi
+        ;;
+    setlevel)
+        source ${APPLOG_WEB_TMP_FILE}
+        if [ $3 -gt -1 ]; then
+            eval cmd=\$$2
+            $cmd $3
+        fi
+        ;;
+    *)
+        echo "Usage: syslogd {start|stop|restart|add|del|setlevel}"
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,3 @@
+local2,local0.*           /data/syslog/user_normal_log # user normal log
+local2,local1.*           /var/volatile/log/user_debug_log  # user debug log file in tmpfs.
+auth,authpriv,cron,daemon,ftp,kern,lpr,mail,news,security,syslog,user,uucp.*                /data/syslog/system_log      # system log

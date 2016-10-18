@@ -1,0 +1,124 @@
+C51 COMPILER V8.02   MAIN                                                                  09/09/2014 23:04:55 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\BIN\main.obj
+COMPILER INVOKED BY: C:\Keil3\C51\BIN\C51.EXE USER\main.c BROWSE INCDIR(.\A7139;.\MISC;.\PLATFORM) DEBUG OBJECTEXTEND PR
+                    -INT(.\LIST\main.lst) OBJECT(.\BIN\main.obj)
+
+line level    source
+
+   1          #include "AT89X52.h"
+   2          #include "A7139.h"
+   3          #include "INTDEF.h"
+   4          #include "PLATFORM.h"
+   5          
+   6          #define LED (P3_6) //LED与P3.6相连，低电平有效（点亮）
+   7          #define KEY (P3_7) //KEY与P3.7相连，低电平有效（按下）
+   8          Uint8 idata tmpbuf[64]; //数组用于存放接收到的数据
+   9          
+  10          /*XTAL @11.0592 Baud @9600*/
+  11          static void UART_Init(void)
+  12          {
+  13   1              SM0 =  0x00;          
+  14   1              SM1 =  0x01;
+  15   1              REN =  0x01;
+  16   1              TMOD = 0x20;     
+  17   1              TH1 =  0xfD;
+  18   1              TL1 =  0xfD;
+  19   1              TR1 =  0x01;
+  20   1              ES =   0x01;                                       
+  21   1      }
+  22          /*XTAL @11.0592 */
+  23          static void LED_Flash_Twice(void)
+  24          {
+  25   1              LED=0;
+  26   1              Delay10ms(2);
+  27   1              LED=1;
+  28   1              Delay10ms(2);
+  29   1              LED=0;
+  30   1              Delay10ms(2);
+  31   1              LED=1;
+  32   1      }
+  33          
+  34          void A7139_WriteFIFO(void)
+  35          {
+  36   1              Uint8 i;
+  37   1              StrobeCmd(CMD_TFR);     //重置Tx数据指针位置    
+  38   1          SCS=0;
+  39   1              SPIx_WriteByte(CMD_FIFO_W);     //送出“写FIFO缓存区”的命令
+  40   1              for(i=0; i <64; i++)
+  41   1                      SPIx_WriteByte(i); //将0-63之间的数字作为待发送数据而写入A7139内部的FIFO缓冲区中，发送给接收端
+  42   1              SCS=1;                             //这里只为演示简单，故采取用0-7之间的数字，用户可自行修改需要发送的数据内容
+  43   1      }
+  44          
+  45          void A7139_ReadFIFO(void)
+  46          {
+  47   1          Uint8 i;
+  48   1              StrobeCmd(CMD_RFR);     //重置Rx数据指针位置    
+  49   1          SCS=0;
+  50   1              SPIx_WriteByte(CMD_FIFO_R);      //送出“读FIFO缓存区”的命令
+  51   1              for(i=0; i <64; i++)
+  52   1                      tmpbuf[i] = SPIx_ReadByte(); //从A7139内部的FIFO缓冲区中读取数据，并将接收到数据暂存入数组tmpbuf中以备它
+             -用
+  53   1              SCS=1;                                                   
+C51 COMPILER V8.02   MAIN                                                                  09/09/2014 23:04:55 PAGE 2   
+
+  54   1      }
+  55          void C51_SendData(void)
+  56          {
+  57   1              A7139_WriteFIFO();
+  58   1              StrobeCmd(CMD_TX);
+  59   1              while(GIO2); //循环等待直至数据发送完毕，GIO2引脚将输出一个正脉冲信号
+  60   1      }
+  61          void C51_RecvData(void)
+  62          {
+  63   1              StrobeCmd(CMD_RX);
+  64   1              while(GIO2); //循环等待直至数据接收完毕，GIO2引脚将输出一个正脉冲信号
+  65   1              A7139_ReadFIFO();
+  66   1      }
+  67          
+  68          void main(void)
+  69          {
+  70   1              Uint8 i;
+  71   1              UART_Init(); //串口初始化
+  72   1              A7139_Init(433.921f); //A7139初始化
+  73   1              LED_Flash_Twice();       //上电LED闪烁2次，作为指示灯
+  74   1              while(1)
+  75   1              {
+  76   2                      if(!KEY)
+  77   2                      {
+  78   3                              Delay10ms(1);
+  79   3                              if(!KEY)
+  80   3                              {
+  81   4                                      LED = 0;
+  82   4                                      C51_SendData();    //发送数据
+  83   4                                      LED = 1;
+  84   4                                      C51_RecvData();    //循环接收数据，直到接收完成
+  85   4                                      LED_Flash_Twice(); 
+  86   4                                      for(i=0;i<64;i++)   //将接收到的反馈数据通过串口打印出来，用户可通过PC端的串口助手查看
+  87   4                                      {
+  88   5                                              SBUF = tmpbuf[i]; //将从接收端处得到反馈数据通过串口打印出来
+  89   5                                              while(!TI);               
+  90   5                                              TI=0;                     //数据应为0x40-0x7F，共计64字节
+  91   5                                      }
+  92   4                              }
+  93   3                      }
+  94   2              }
+  95   1      }
+  96          
+  97          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    204    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =     64    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

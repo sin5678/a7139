@@ -1,0 +1,915 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        09/09/2014  23:07:29  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL3\C51\BIN\BL51.EXE .\BIN\main.obj, .\BIN\A7139.obj, .\BIN\PLATFORM.obj TO .\BIN\Test0_Recv PRINT (.\LIST\Test0_Re
+>> cv.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
+
+
+INPUT MODULES INCLUDED:
+  .\BIN\main.obj (MAIN)
+  .\BIN\A7139.obj (A7139)
+  .\BIN\PLATFORM.obj (PLATFORM)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FPADD)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FPMUL)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FPDIV)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FPCMP)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FCAST)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?CASTF)
+  C:\KEIL3\C51\LIB\C51FPS.LIB (?C?FPGETOPN)
+  C:\KEIL3\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL3\C51\LIB\C51S.LIB (?C?LNEG)
+  C:\KEIL3\C51\LIB\C51S.LIB (?C?ULSHR)
+
+
+LINK MAP OF MODULE:  .\BIN\Test0_Recv (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0019H     UNIT         _DATA_GROUP_
+            DATA    0021H     0007H     UNIT         ?DT?_A7139_SETDATARATE?A7139
+            DATA    0028H     0003H     UNIT         ?DT?A7139_GETRSSI?A7139
+            DATA    002BH     0003H     UNIT         ?DT?A7139_RCOSC_CAL?A7139
+            DATA    002EH     0001H     UNIT         ?DT?_A7139_SETPACKLEN?A7139
+            DATA    002FH     0001H     UNIT         ?DT?_A7139_ISBATTERYLOW?A7139
+            IDATA   0030H     0040H     UNIT         ?ID?MAIN
+            IDATA   0070H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     03EBH     UNIT         ?C?LIB_CODE
+            CODE    03EEH     010EH     UNIT         ?PR?A7139_CAL?A7139
+            CODE    04FCH     00E4H     UNIT         ?PR?_A7139_SETFREQ?A7139
+            CODE    05E0H     00BCH     UNIT         ?PR?_A7139_SETDATARATE?A7139
+            CODE    069CH     009AH     UNIT         ?PR?A7139_CONFIG?A7139
+            CODE    0736H     0070H     UNIT         ?PR?A7139_RCOSC_CAL?A7139
+            CODE    07A6H     0067H     UNIT         ?PR?A7139_GETRSSI?A7139
+            CODE    080DH     005DH     UNIT         ?PR?_A7139_ISBATTERYLOW?A7139
+            CODE    086AH     004AH     UNIT         ?CO?A7139
+            CODE    08B4H     0047H     UNIT         ?PR?_A7139_SETCID?A7139
+            CODE    08FBH     003AH     UNIT         ?PR?_A7139_INIT?A7139
+            CODE    0935H     0036H     UNIT         ?PR?A7139_WOT?A7139
+            CODE    096BH     0035H     UNIT         ?PR?A7139_WOR_BYSYNC?A7139
+            CODE    09A0H     0035H     UNIT         ?PR?A7139_WOR_BYPREAMBLE?A7139
+            CODE    09D5H     0032H     UNIT         ?PR?_A7139_SETPACKLEN?A7139
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 2
+
+
+            CODE    0A07H     002FH     UNIT         ?PR?_A7139_WRITEPAGEB?A7139
+            CODE    0A36H     002EH     UNIT         ?PR?SPIX_READWORD?PLATFORM
+            CODE    0A64H     002BH     UNIT         ?PR?_A7139_WRITEPAGEA?A7139
+            CODE    0A8FH     0025H     UNIT         ?PR?A7139_READFIFO?MAIN
+            CODE    0AB4H     0023H     UNIT         ?PR?A7139_WRITEFIFO?MAIN
+            CODE    0AD7H     0022H     UNIT         ?PR?_A7139_WRITEREG?A7139
+            CODE    0AF9H     001DH     UNIT         ?PR?_A7139_READPAGEA?A7139
+            CODE    0B16H     001DH     UNIT         ?PR?_SPIX_WRITEWORD?PLATFORM
+            CODE    0B33H     001BH     UNIT         ?PR?A7139_READPID?A7139
+            CODE    0B4EH     001BH     UNIT         ?PR?_SPIX_WRITEBYTE?PLATFORM
+            CODE    0B69H     001AH     UNIT         ?PR?SPIX_READBYTE?PLATFORM
+            CODE    0B83H     0019H     UNIT         ?PR?MAIN?MAIN
+            CODE    0B9CH     0018H     UNIT         ?PR?LED_FLASH_TWICE?MAIN
+            CODE    0BB4H     0018H     UNIT         ?PR?_DELAY10MS?PLATFORM
+            CODE    0BCCH     0012H     UNIT         ?PR?_DELAY10US?PLATFORM
+            CODE    0BDEH     000FH     UNIT         ?PR?_A7139_READREG?A7139
+            CODE    0BEDH     000CH     UNIT         ?PR?C51_SENDDATA?MAIN
+            CODE    0BF9H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0C05H     000BH     UNIT         ?PR?C51_RECVDATA?MAIN
+            CODE    0C10H     0008H     UNIT         ?PR?_STROBECMD?A7139
+
+
+
+OVERLAY MAP OF MODULE:   .\BIN\Test0_Recv (MAIN)
+
+
+SEGMENT                                  DATA_GROUP 
+  +--> CALLED SEGMENT                  START    LENGTH
+------------------------------------------------------
+?C_C51STARTUP                          -----    -----
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                          -----    -----
+  +--> ?PR?_A7139_INIT?A7139
+  +--> ?PR?LED_FLASH_TWICE?MAIN
+  +--> ?PR?C51_RECVDATA?MAIN
+  +--> ?PR?C51_SENDDATA?MAIN
+
+?PR?_A7139_INIT?A7139                  0008H    0004H
+  +--> ?PR?_STROBECMD?A7139
+  +--> ?PR?A7139_CONFIG?A7139
+  +--> ?PR?_DELAY10MS?PLATFORM
+  +--> ?PR?_A7139_SETCID?A7139
+  +--> ?PR?_A7139_SETFREQ?A7139
+  +--> ?PR?A7139_CAL?A7139
+
+?PR?_STROBECMD?A7139                   -----    -----
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+
+?PR?A7139_CONFIG?A7139                 000CH    0001H
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+  +--> ?PR?_A7139_WRITEPAGEA?A7139
+  +--> ?PR?_A7139_WRITEPAGEB?A7139
+
+?PR?_A7139_WRITEREG?A7139              001FH    0002H
+  +--> ?CO?A7139
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 3
+
+
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+  +--> ?PR?_SPIX_WRITEWORD?PLATFORM
+
+?PR?_A7139_WRITEPAGEA?A7139            0015H    0002H
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+
+?PR?_A7139_WRITEPAGEB?A7139            001DH    0002H
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+
+?PR?_A7139_SETCID?A7139                000CH    0004H
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+
+?PR?_A7139_SETFREQ?A7139               000CH    0011H
+  +--> ?PR?_STROBECMD?A7139
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+  +--> ?PR?_A7139_WRITEPAGEB?A7139
+
+?PR?A7139_CAL?A7139                    000CH    0009H
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+  +--> ?PR?_A7139_READREG?A7139
+  +--> ?PR?_A7139_READPAGEA?A7139
+  +--> ?PR?_A7139_WRITEPAGEA?A7139
+
+?PR?_A7139_READREG?A7139               -----    -----
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+  +--> ?PR?SPIX_READWORD?PLATFORM
+
+?PR?_A7139_READPAGEA?A7139             -----    -----
+  +--> ?CO?A7139
+  +--> ?PR?_A7139_WRITEREG?A7139
+  +--> ?PR?_A7139_READREG?A7139
+
+?PR?LED_FLASH_TWICE?MAIN               -----    -----
+  +--> ?PR?_DELAY10MS?PLATFORM
+
+?PR?C51_RECVDATA?MAIN                  -----    -----
+  +--> ?PR?_STROBECMD?A7139
+  +--> ?PR?A7139_READFIFO?MAIN
+
+?PR?A7139_READFIFO?MAIN                0008H    0001H
+  +--> ?PR?_STROBECMD?A7139
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+  +--> ?PR?SPIX_READBYTE?PLATFORM
+
+?PR?C51_SENDDATA?MAIN                  -----    -----
+  +--> ?PR?A7139_WRITEFIFO?MAIN
+  +--> ?PR?_STROBECMD?A7139
+
+?PR?A7139_WRITEFIFO?MAIN               0008H    0001H
+  +--> ?PR?_STROBECMD?A7139
+  +--> ?PR?_SPIX_WRITEBYTE?PLATFORM
+
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 4
+
+
+
+SYMBOL TABLE OF MODULE:  .\BIN\Test0_Recv (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0B9CH         PUBLIC        LED_Flash_Twice
+  I:0030H         PUBLIC        tmpbuf
+  B:0080H.2       PUBLIC        P0_2
+  C:0BEDH         PUBLIC        C51_SendData
+  B:0080H.6       PUBLIC        P0_6
+  C:0C05H         PUBLIC        C51_RecvData
+  B:00B0H.6       PUBLIC        P3_6
+  C:0A8FH         PUBLIC        A7139_ReadFIFO
+  C:0B83H         PUBLIC        main
+  C:0AB4H         PUBLIC        A7139_WriteFIFO
+  -------         PROC          LED_FLASH_TWICE
+  C:0B9CH         LINE#         10
+  C:0B9CH         LINE#         11
+  C:0B9CH         LINE#         12
+  C:0B9EH         LINE#         13
+  C:0BA3H         LINE#         14
+  C:0BA5H         LINE#         15
+  C:0BAAH         LINE#         16
+  C:0BACH         LINE#         17
+  C:0BB1H         LINE#         18
+  C:0BB3H         LINE#         19
+  -------         ENDPROC       LED_FLASH_TWICE
+  -------         PROC          A7139_WRITEFIFO
+  -------         DO            
+  D:0008H         SYMBOL        i
+  -------         ENDDO         
+  C:0AB4H         LINE#         21
+  C:0AB4H         LINE#         22
+  C:0AB4H         LINE#         24
+  C:0AB9H         LINE#         25
+  C:0ABBH         LINE#         26
+  C:0AC0H         LINE#         27
+  C:0AC3H         LINE#         28
+  C:0AD4H         LINE#         29
+  C:0AD6H         LINE#         31
+  -------         ENDPROC       A7139_WRITEFIFO
+  -------         PROC          A7139_READFIFO
+  -------         DO            
+  D:0008H         SYMBOL        i
+  -------         ENDDO         
+  C:0A8FH         LINE#         33
+  C:0A8FH         LINE#         34
+  C:0A8FH         LINE#         36
+  C:0A94H         LINE#         37
+  C:0A96H         LINE#         38
+  C:0A9BH         LINE#         39
+  C:0A9EH         LINE#         40
+  C:0AB1H         LINE#         41
+  C:0AB3H         LINE#         42
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 5
+
+
+  -------         ENDPROC       A7139_READFIFO
+  -------         PROC          C51_SENDDATA
+  C:0BEDH         LINE#         43
+  C:0BEDH         LINE#         44
+  C:0BEDH         LINE#         45
+  C:0BF0H         LINE#         46
+  C:0BF5H         LINE#         47
+  C:0BF8H         LINE#         48
+  -------         ENDPROC       C51_SENDDATA
+  -------         PROC          C51_RECVDATA
+  C:0C05H         LINE#         49
+  C:0C05H         LINE#         50
+  C:0C05H         LINE#         51
+  C:0C0AH         LINE#         52
+  C:0C0DH         LINE#         53
+  -------         ENDPROC       C51_RECVDATA
+  -------         PROC          MAIN
+  C:0B83H         LINE#         55
+  C:0B83H         LINE#         56
+  C:0B83H         LINE#         57
+  C:0B8EH         LINE#         58
+  C:0B91H         LINE#         59
+  C:0B91H         LINE#         60
+  C:0B91H         LINE#         61
+  C:0B94H         LINE#         62
+  C:0B97H         LINE#         63
+  C:0B9AH         LINE#         64
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        A7139
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0AE5H         PUBLIC        _A7139_WriteReg
+  C:03EEH         PUBLIC        A7139_Cal
+  C:05E0H         PUBLIC        _A7139_SetDataRate
+  C:088AH         PUBLIC        A7139Config_PageA
+  B:0080H.2       PUBLIC        P0_2
+  C:08AAH         PUBLIC        A7139Config_PageB
+  B:0080H.3       PUBLIC        P0_3
+  B:0080H.4       PUBLIC        P0_4
+  C:04FCH         SYMBOL        _A7139_SetFreq
+  B:0080H.5       PUBLIC        P0_5
+  C:0AF9H         SYMBOL        _A7139_ReadPageA
+  B:0080H.6       PUBLIC        P0_6
+  B:0080H.7       PUBLIC        P0_7
+  C:0A6BH         SYMBOL        _A7139_WritePageA
+  C:09D5H         PUBLIC        _A7139_SetPackLen
+  C:0A07H         SYMBOL        _A7139_WritePageB
+  C:080DH         PUBLIC        _A7139_IsBatteryLow
+  C:096BH         PUBLIC        A7139_WOR_BySync
+  C:09A0H         PUBLIC        A7139_WOR_ByPreamble
+  C:069CH         SYMBOL        A7139_Config
+  C:0B33H         PUBLIC        A7139_ReadPID
+  C:08B4H         PUBLIC        _A7139_SetCID
+  C:07A6H         PUBLIC        A7139_GetRSSI
+  C:0736H         PUBLIC        A7139_RCOSC_Cal
+  C:0C10H         PUBLIC        _StrobeCmd
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 6
+
+
+  C:08FBH         PUBLIC        _A7139_Init
+  C:086AH         PUBLIC        A7139Config
+  C:0935H         PUBLIC        A7139_WOT
+  C:0BDEH         SYMBOL        _A7139_ReadReg
+  C:0AD7H         SYMBOL        L?0087
+  C:0ADEH         SYMBOL        L?0088
+  -------         PROC          L?0086
+  -------         ENDPROC       L?0086
+  C:0AD7H         SYMBOL        L?0087
+  C:0ADEH         SYMBOL        L?0088
+  -------         PROC          _A7139_WRITEREG
+  D:0007H         SYMBOL        regAddr
+  D:001FH         SYMBOL        regVal
+  C:0AE5H         LINE#         9
+  C:0AE9H         LINE#         10
+  C:0AE9H         LINE#         11
+  C:0AEBH         LINE#         12
+  C:0AEBH         LINE#         13
+  C:0AEEH         LINE#         14
+  C:0AEFH         LINE#         15
+  C:0AF6H         LINE#         16
+  C:0AF8H         LINE#         17
+  -------         ENDPROC       _A7139_WRITEREG
+  -------         PROC          _A7139_READREG
+  D:0007H         SYMBOL        regAddr
+  -------         DO            
+  D:0006H         SYMBOL        regVal
+  -------         ENDDO         
+  C:0BDEH         LINE#         19
+  C:0BDEH         LINE#         20
+  C:0BDEH         LINE#         22
+  C:0BE0H         LINE#         23
+  C:0BE3H         LINE#         24
+  C:0BE6H         LINE#         25
+  C:0BE7H         LINE#         26
+  C:0BEAH         LINE#         27
+  C:0BECH         LINE#         28
+  C:0BECH         LINE#         29
+  -------         ENDPROC       _A7139_READREG
+  -------         PROC          L?0089
+  -------         ENDPROC       L?0089
+  -------         PROC          _A7139_WRITEPAGEA
+  D:0007H         SYMBOL        address
+  D:0015H         SYMBOL        dataWord
+  -------         DO            
+  D:0004H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0A6BH         LINE#         31
+  C:0A6FH         LINE#         32
+  C:0A6FH         LINE#         34
+  C:0A71H         LINE#         35
+  C:0A81H         LINE#         36
+  C:0A86H         LINE#         37
+  -------         ENDPROC       _A7139_WRITEPAGEA
+  -------         PROC          _A7139_WRITEPAGEB
+  D:0007H         SYMBOL        address
+  D:001DH         SYMBOL        dataWord
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 7
+
+
+  -------         DO            
+  D:0004H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0A07H         LINE#         40
+  C:0A0BH         LINE#         41
+  C:0A0BH         LINE#         43
+  C:0A0FH         LINE#         44
+  C:0A28H         LINE#         45
+  C:0A2DH         LINE#         46
+  -------         ENDPROC       _A7139_WRITEPAGEB
+  -------         PROC          _A7139_READPAGEA
+  D:0007H         SYMBOL        address
+  -------         DO            
+  D:0004H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0AF9H         LINE#         49
+  C:0AF9H         LINE#         50
+  C:0AF9H         LINE#         52
+  C:0AFBH         LINE#         53
+  C:0B0BH         LINE#         54
+  C:0B10H         LINE#         55
+  C:0B15H         LINE#         56
+  C:0B15H         LINE#         57
+  -------         ENDPROC       _A7139_READPAGEA
+  -------         PROC          A7139_CONFIG
+  -------         DO            
+  D:000CH         SYMBOL        i
+  -------         ENDDO         
+  C:069CH         LINE#         59
+  C:069CH         LINE#         60
+  C:069CH         LINE#         62
+  C:069FH         LINE#         63
+  C:06C4H         LINE#         64
+  C:06C7H         LINE#         65
+  C:06ECH         LINE#         66
+  C:06EFH         LINE#         67
+  C:070DH         LINE#         68
+  C:0710H         LINE#         69
+  C:0735H         LINE#         70
+  -------         ENDPROC       A7139_CONFIG
+  -------         PROC          A7139_CAL
+  -------         DO            
+  D:000CH         SYMBOL        fb
+  D:000DH         SYMBOL        fcd
+  D:000EH         SYMBOL        fbcf
+  D:000FH         SYMBOL        vb
+  D:0010H         SYMBOL        vbcf
+  D:0011H         SYMBOL        vcb
+  D:0012H         SYMBOL        vccf
+  D:0013H         SYMBOL        tmp
+  -------         ENDDO         
+  C:03EEH         LINE#         72
+  C:03EEH         LINE#         73
+  C:03EEH         LINE#         79
+  C:0401H         LINE#         80
+  C:0401H         LINE#         81
+  C:040AH         LINE#         82
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 8
+
+
+  C:0416H         LINE#         84
+  C:041FH         LINE#         85
+  C:0424H         LINE#         86
+  C:042DH         LINE#         87
+  C:043EH         LINE#         88
+  C:043EH         LINE#         89
+  C:043EH         LINE#         91
+  C:043EH         LINE#         93
+  C:0447H         LINE#         94
+  C:044CH         LINE#         95
+  C:045DH         LINE#         96
+  C:045DH         LINE#         97
+  C:045DH         LINE#         99
+  C:045DH         LINE#         101
+  C:0466H         LINE#         102
+  C:046FH         LINE#         103
+  C:0480H         LINE#         104
+  C:048AH         LINE#         105
+  C:048AH         LINE#         106
+  C:0493H         LINE#         107
+  C:0498H         LINE#         108
+  C:04A7H         LINE#         109
+  C:04AFH         LINE#         110
+  C:04BEH         LINE#         114
+  C:04CFH         LINE#         115
+  C:04CFH         LINE#         116
+  C:04D8H         LINE#         117
+  C:04DDH         LINE#         119
+  C:04E6H         LINE#         120
+  C:04F5H         LINE#         121
+  C:04FBH         LINE#         122
+  C:04FBH         LINE#         123
+  C:04FBH         LINE#         125
+  C:04FBH         LINE#         126
+  -------         ENDPROC       A7139_CAL
+  -------         PROC          _STROBECMD
+  D:0007H         SYMBOL        cmd
+  C:0C10H         LINE#         128
+  C:0C10H         LINE#         129
+  C:0C10H         LINE#         130
+  C:0C12H         LINE#         131
+  C:0C15H         LINE#         132
+  C:0C17H         LINE#         133
+  -------         ENDPROC       _STROBECMD
+  -------         PROC          _A7139_INIT
+  D:0008H         SYMBOL        rfFreq
+  C:08FBH         LINE#         135
+  C:0903H         LINE#         136
+  C:0903H         LINE#         137
+  C:0905H         LINE#         138
+  C:0907H         LINE#         139
+  C:0909H         LINE#         140
+  C:090BH         LINE#         141
+  C:090DH         LINE#         142
+  C:090FH         LINE#         143
+  C:0914H         LINE#         144
+  C:0917H         LINE#         145
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 9
+
+
+  C:091CH         LINE#         146
+  C:0927H         LINE#         147
+  C:0932H         LINE#         148
+  -------         ENDPROC       _A7139_INIT
+  -------         PROC          _A7139_SETCID
+  D:000CH         SYMBOL        id
+  C:08B4H         LINE#         151
+  C:08BCH         LINE#         152
+  C:08BCH         LINE#         153
+  C:08BEH         LINE#         154
+  C:08C3H         LINE#         155
+  C:08D3H         LINE#         156
+  C:08E3H         LINE#         157
+  C:08F3H         LINE#         158
+  C:08F8H         LINE#         159
+  C:08FAH         LINE#         160
+  -------         ENDPROC       _A7139_SETCID
+  -------         PROC          A7139_READPID
+  -------         DO            
+  D:0006H         SYMBOL        pid
+  D:0004H         SYMBOL        pagAddr
+  -------         ENDDO         
+  C:0B33H         LINE#         162
+  C:0B33H         LINE#         163
+  C:0B33H         LINE#         165
+  C:0B34H         LINE#         166
+  C:0B43H         LINE#         167
+  C:0B48H         LINE#         168
+  C:0B4DH         LINE#         169
+  C:0B4DH         LINE#         170
+  -------         ENDPROC       A7139_READPID
+  -------         PROC          _A7139_SETFREQ
+  D:000CH         SYMBOL        rfFreq
+  -------         DO            
+  D:0010H         SYMBOL        divFreq
+  D:0014H         SYMBOL        intFreq
+  D:0015H         SYMBOL        fltFreq
+  D:0019H         SYMBOL        fpFreg
+  D:001BH         SYMBOL        orgVal
+  -------         ENDDO         
+  C:04FCH         LINE#         172
+  C:0504H         LINE#         173
+  C:0504H         LINE#         174
+  C:0517H         LINE#         175
+  C:051CH         LINE#         176
+  C:053DH         LINE#         177
+  C:0556H         LINE#         179
+  C:055BH         LINE#         181
+  C:0569H         LINE#         182
+  C:0572H         LINE#         184
+  C:0580H         LINE#         185
+  C:0589H         LINE#         187
+  C:05A2H         LINE#         188
+  C:05A6H         LINE#         190
+  C:05AFH         LINE#         191
+  C:05B8H         LINE#         193
+  C:05C2H         LINE#         194
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 10
+
+
+  C:05CFH         LINE#         196
+  C:05D8H         LINE#         198
+  -------         ENDPROC       _A7139_SETFREQ
+  -------         PROC          _A7139_SETDATARATE
+  D:0021H         SYMBOL        datRate
+  -------         DO            
+  D:0022H         SYMBOL        segCSC
+  D:0024H         SYMBOL        segSDR
+  D:0026H         SYMBOL        segIFB
+  D:0006H         SYMBOL        segDMO
+  -------         ENDDO         
+  C:05E0H         LINE#         201
+  C:05E2H         LINE#         202
+  C:05E2H         LINE#         204
+  C:05E7H         LINE#         205
+  C:05F7H         LINE#         206
+  C:05FEH         LINE#         207
+  C:060EH         LINE#         208
+  C:0611H         LINE#         209
+  C:061BH         LINE#         210
+  C:0631H         LINE#         211
+  C:0631H         LINE#         212
+  C:0631H         LINE#         213
+  C:0631H         LINE#         215
+  C:063DH         LINE#         217
+  C:0641H         LINE#         219
+  C:0641H         LINE#         220
+  C:0641H         LINE#         221
+  C:0643H         LINE#         222
+  C:0643H         LINE#         223
+  C:0643H         LINE#         225
+  C:064FH         LINE#         227
+  C:0656H         LINE#         229
+  C:0656H         LINE#         230
+  C:0656H         LINE#         231
+  C:0658H         LINE#         232
+  C:0658H         LINE#         233
+  C:0658H         LINE#         235
+  C:0664H         LINE#         237
+  C:066DH         LINE#         239
+  C:0671H         LINE#         240
+  C:0671H         LINE#         241
+  C:0673H         LINE#         242
+  C:0673H         LINE#         243
+  C:0673H         LINE#         245
+  C:067FH         LINE#         247
+  C:0688H         LINE#         249
+  C:0694H         LINE#         250
+  C:0694H         LINE#         251
+  C:0696H         LINE#         252
+  C:0696H         LINE#         253
+  C:0696H         LINE#         260
+  C:0696H         LINE#         261
+  C:0696H         LINE#         262
+  C:0696H         LINE#         263
+  C:0699H         LINE#         264
+  C:0699H         LINE#         265
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 11
+
+
+  C:069BH         LINE#         266
+  -------         ENDPROC       _A7139_SETDATARATE
+  -------         PROC          _A7139_SETPACKLEN
+  D:002EH         SYMBOL        len
+  -------         DO            
+  D:0004H         SYMBOL        pagVal
+  -------         ENDDO         
+  C:09D5H         LINE#         268
+  C:09D7H         LINE#         269
+  C:09D7H         LINE#         271
+  C:09DCH         LINE#         273
+  C:09E2H         LINE#         274
+  C:09F3H         LINE#         276
+  C:09FFH         LINE#         277
+  C:0A04H         LINE#         278
+  C:0A06H         LINE#         279
+  -------         ENDPROC       _A7139_SETPACKLEN
+  -------         PROC          _A7139_ISBATTERYLOW
+  D:002FH         SYMBOL        low2_x
+  -------         DO            
+  D:0004H         SYMBOL        pagVal
+  -------         ENDDO         
+  C:080DH         LINE#         296
+  C:080FH         LINE#         297
+  C:080FH         LINE#         299
+  C:081DH         LINE#         300
+  C:0820H         LINE#         301
+  C:0825H         LINE#         303
+  C:0833H         LINE#         304
+  C:0848H         LINE#         305
+  C:084DH         LINE#         307
+  C:0869H         LINE#         308
+  -------         ENDPROC       _A7139_ISBATTERYLOW
+  -------         PROC          A7139_GETRSSI
+  -------         DO            
+  D:0028H         SYMBOL        rssi
+  D:0029H         SYMBOL        t_retry
+  -------         ENDDO         
+  C:07A6H         LINE#         309
+  C:07A6H         LINE#         310
+  C:07A6H         LINE#         312
+  C:07ACH         LINE#         314
+  C:07B1H         LINE#         316
+  C:07C2H         LINE#         318
+  C:07D2H         LINE#         320
+  C:07D2H         LINE#         321
+  C:07DCH         LINE#         323
+  C:07EDH         LINE#         324
+  C:07F8H         LINE#         325
+  C:0802H         LINE#         327
+  C:0805H         LINE#         328
+  C:080AH         LINE#         329
+  C:080CH         LINE#         330
+  -------         ENDPROC       A7139_GETRSSI
+  -------         PROC          A7139_RCOSC_CAL
+  -------         DO            
+  D:002BH         SYMBOL        retry
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 12
+
+
+  D:0006H         SYMBOL        calbrtVal
+  D:002CH         SYMBOL        t_retry
+  -------         ENDDO         
+  C:0736H         LINE#         331
+  C:0736H         LINE#         332
+  C:0736H         LINE#         333
+  C:0739H         LINE#         334
+  C:073FH         LINE#         336
+  C:0750H         LINE#         337
+  C:0750H         LINE#         339
+  C:0761H         LINE#         340
+  C:0761H         LINE#         341
+  C:076CH         LINE#         342
+  C:077BH         LINE#         344
+  C:0789H         LINE#         345
+  C:0799H         LINE#         346
+  C:079CH         LINE#         347
+  C:07A3H         LINE#         348
+  C:07A5H         LINE#         349
+  -------         ENDPROC       A7139_RCOSC_CAL
+  -------         PROC          A7139_WOT
+  C:0935H         LINE#         350
+  C:0935H         LINE#         351
+  C:0935H         LINE#         352
+  C:093BH         LINE#         353
+  C:093EH         LINE#         354
+  C:0943H         LINE#         356
+  C:094CH         LINE#         358
+  C:0955H         LINE#         360
+  C:0966H         LINE#         362
+  C:0969H         LINE#         363
+  -------         ENDPROC       A7139_WOT
+  -------         PROC          A7139_WOR_BYSYNC
+  C:096BH         LINE#         365
+  C:096BH         LINE#         366
+  C:096BH         LINE#         367
+  C:0970H         LINE#         369
+  C:0979H         LINE#         371
+  C:0982H         LINE#         372
+  C:0988H         LINE#         373
+  C:098BH         LINE#         375
+  C:099CH         LINE#         377
+  C:099FH         LINE#         379
+  -------         ENDPROC       A7139_WOR_BYSYNC
+  -------         PROC          A7139_WOR_BYPREAMBLE
+  C:09A0H         LINE#         380
+  C:09A0H         LINE#         381
+  C:09A0H         LINE#         382
+  C:09A5H         LINE#         383
+  C:09AEH         LINE#         388
+  C:09B7H         LINE#         390
+  C:09BDH         LINE#         391
+  C:09C0H         LINE#         392
+  C:09D1H         LINE#         394
+  C:09D4H         LINE#         397
+  -------         ENDPROC       A7139_WOR_BYPREAMBLE
+  -------         ENDMOD        A7139
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 13
+
+
+
+  -------         MODULE        PLATFORM
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  B:0080H.3       PUBLIC        P0_3
+  B:0080H.4       PUBLIC        P0_4
+  C:0BB4H         PUBLIC        _Delay10ms
+  C:0BCCH         PUBLIC        _Delay10us
+  C:0B4EH         PUBLIC        _SPIx_WriteByte
+  C:0B16H         PUBLIC        _SPIx_WriteWord
+  C:0B69H         PUBLIC        SPIx_ReadByte
+  C:0A36H         PUBLIC        SPIx_ReadWord
+  -------         PROC          _DELAY10MS
+  D:0007H         SYMBOL        n
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0005H         SYMBOL        j
+  -------         ENDDO         
+  C:0BB4H         LINE#         3
+  C:0BB4H         LINE#         4
+  C:0BB4H         LINE#         6
+  C:0BBAH         LINE#         7
+  C:0BBAH         LINE#         8
+  C:0BC2H         LINE#         9
+  C:0BCBH         LINE#         10
+  C:0BCBH         LINE#         11
+  -------         ENDPROC       _DELAY10MS
+  -------         PROC          _DELAY10US
+  D:0007H         SYMBOL        n
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0BCCH         LINE#         13
+  C:0BCCH         LINE#         14
+  C:0BCCH         LINE#         17
+  C:0BD2H         LINE#         18
+  C:0BD2H         LINE#         19
+  C:0BDDH         LINE#         20
+  C:0BDDH         LINE#         21
+  -------         ENDPROC       _DELAY10US
+  -------         PROC          _SPIX_WRITEBYTE
+  D:0007H         SYMBOL        dat
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0B4EH         LINE#         23
+  C:0B4EH         LINE#         24
+  C:0B4EH         LINE#         26
+  C:0B50H         LINE#         27
+  C:0B50H         LINE#         28
+  C:0B54H         LINE#         29
+  C:0B58H         LINE#         31
+  C:0B5AH         LINE#         32
+  C:0B5BH         LINE#         33
+  C:0B5DH         LINE#         34
+  C:0B5EH         LINE#         35
+  C:0B60H         LINE#         36
+  C:0B64H         LINE#         37
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 14
+
+
+  C:0B68H         LINE#         38
+  -------         ENDPROC       _SPIX_WRITEBYTE
+  -------         PROC          _SPIX_WRITEWORD
+  D:0006H         SYMBOL        word
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:0B16H         LINE#         40
+  C:0B16H         LINE#         41
+  C:0B16H         LINE#         43
+  C:0B18H         LINE#         44
+  C:0B18H         LINE#         45
+  C:0B1CH         LINE#         46
+  C:0B20H         LINE#         48
+  C:0B22H         LINE#         49
+  C:0B24H         LINE#         50
+  C:0B25H         LINE#         51
+  C:0B27H         LINE#         52
+  C:0B2EH         LINE#         53
+  C:0B32H         LINE#         54
+  -------         ENDPROC       _SPIX_WRITEWORD
+  -------         PROC          SPIX_READBYTE
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0B69H         LINE#         56
+  C:0B69H         LINE#         57
+  C:0B69H         LINE#         59
+  C:0B6BH         LINE#         60
+  C:0B6DH         LINE#         61
+  C:0B6DH         LINE#         62
+  C:0B73H         LINE#         63
+  C:0B78H         LINE#         65
+  C:0B79H         LINE#         66
+  C:0B7BH         LINE#         67
+  C:0B7CH         LINE#         68
+  C:0B7EH         LINE#         69
+  C:0B82H         LINE#         70
+  C:0B82H         LINE#         71
+  -------         ENDPROC       SPIX_READBYTE
+  -------         PROC          SPIX_READWORD
+  -------         DO            
+  D:0002H         SYMBOL        i
+  D:0004H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0A36H         LINE#         73
+  C:0A36H         LINE#         74
+  C:0A36H         LINE#         76
+  C:0A38H         LINE#         77
+  C:0A3BH         LINE#         78
+  C:0A3BH         LINE#         79
+  C:0A41H         LINE#         80
+  C:0A4BH         LINE#         82
+  C:0A4FH         LINE#         83
+  C:0A51H         LINE#         84
+  C:0A52H         LINE#         85
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 15
+
+
+  C:0A54H         LINE#         86
+  C:0A5FH         LINE#         87
+  C:0A63H         LINE#         88
+  -------         ENDPROC       SPIX_READWORD
+  -------         ENDMOD        PLATFORM
+
+  -------         MODULE        ?C?FPADD
+  C:000AH         PUBLIC        ?C?FPADD
+  C:0006H         PUBLIC        ?C?FPSUB
+  -------         ENDMOD        ?C?FPADD
+
+  -------         MODULE        ?C?FPMUL
+  C:00FBH         PUBLIC        ?C?FPMUL
+  -------         ENDMOD        ?C?FPMUL
+
+  -------         MODULE        ?C?FPDIV
+  C:0204H         PUBLIC        ?C?FPDIV
+  -------         ENDMOD        ?C?FPDIV
+
+  -------         MODULE        ?C?FPCMP
+  C:02A3H         PUBLIC        ?C?FPCMP
+  C:02A1H         PUBLIC        ?C?FPCMP3
+  -------         ENDMOD        ?C?FPCMP
+
+  -------         MODULE        ?C?FCAST
+  C:0318H         PUBLIC        ?C?FCASTC
+  C:0313H         PUBLIC        ?C?FCASTI
+  C:030EH         PUBLIC        ?C?FCASTL
+  -------         ENDMOD        ?C?FCAST
+
+  -------         MODULE        ?C?CASTF
+  C:034CH         PUBLIC        ?C?CASTF
+  -------         ENDMOD        ?C?CASTF
+
+  -------         MODULE        ?C?LNEG
+  C:03CDH         PUBLIC        ?C?LNEG
+  -------         ENDMOD        ?C?LNEG
+
+  -------         MODULE        ?C?ULSHR
+  C:03DBH         PUBLIC        ?C?ULSHR
+  -------         ENDMOD        ?C?ULSHR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?A7139_READPID?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_A7139_SETDATARATE?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_A7139_SETPACKLEN?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_A7139_ISBATTERYLOW?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?A7139_GETRSSI?A7139
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/09/2014  23:07:29  PAGE 16
+
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?A7139_WOT?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?A7139_WOR_BYSYNC?A7139
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?A7139_WOR_BYPREAMBLE?A7139
+
+Program Size: data=113.0 xdata=0 code=3096
+LINK/LOCATE RUN COMPLETE.  8 WARNING(S),  0 ERROR(S)
